@@ -3,6 +3,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from .iou3d_cuda import boxes_iou_bev_gpu, boxes_overlap_bev_gpu, nms_normal_gpu, nms_gpu
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from .iou3d_cuda import boxes_iou_bev_gpu, boxes_overlap_bev_gpu, nms_normal_gpu, nms_gpu
 
 
 def boxes3d_to_bev_torch(boxes3d):

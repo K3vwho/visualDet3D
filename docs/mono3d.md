@@ -7,25 +7,25 @@
 ```bash
 # copy mono 3D example config
 cd config
-cp Yolo3D_example $CONFIG_FILE.py
+cp Yolo3D_example $CONFIG_FILEconfig.py
 
 ## Modify config path
-nano $CONFIG_FILE.py
+nano $CONFIG_FILEconfig.py
 cd ..
 
 ## Compute image database and anchors mean/std
 # You can run ./launcher/det_precompute.sh without arguments to see helper documents
-./launcher/det_precompute.sh config/$CONFIG_FILE.py train
-./launcher/det_precompute.sh config/$CONFIG_FILE.py test # only for upload testing
+./launcher/det_precompute.sh config/$CONFIG_FILEconfig.py train
+./launcher/det_precompute.sh config/$CONFIG_FILEconfig.py test # only for upload testing
 
 ## train the model with one GPU
 # You can run ./launcher/train.sh without arguments to see helper documents
-./launcher/train.sh  --config/$CONFIG_FILE.py 0 $experiment_name # validation goes along
+./launcher/train.sh  --config/$CONFIG_FILEconfig.py 0 $experiment_name # validation goes along
 
 ## produce validation/test result # we only support single GPU testing
 # You can run ./launcher/eval.sh without arguments to see helper documents
-./launcher/eval.sh --config/$CONFIG_FILE.py 0 $CHECKPOINT_PATH validation # test on validation split
-./launcher/eval.sh --config/$CONFIG_FILE.py 0 $CHECKPOINT_PATH test # test on test split
+./launcher/eval.sh --config/$CONFIG_FILEconfig.py 0 $CHECKPOINT_PATH validation # test on validation split
+./launcher/eval.sh --config/$CONFIG_FILEconfig.py 0 $CHECKPOINT_PATH test # test on test split
 ```
 
 ## Testing on Lyft dataset without retraining

@@ -135,10 +135,10 @@ class AverageMeter(object):
         self.avg = self.sum / self.count
 
 def cfg_from_file(cfg_filename:str)->EasyDict:
-    assert cfg_filename.endswith('.py')
+    assert cfg_filename.endswith('config.py')
 
     with tempfile.TemporaryDirectory() as temp_config_dir:
-        temp_config_file = tempfile.NamedTemporaryFile(dir=temp_config_dir, suffix='.py')
+        temp_config_file = tempfile.NamedTemporaryFile(dir=temp_config_dir, suffix='config.py')
         temp_config_name = os.path.basename(temp_config_file.name)
         shutil.copyfile(cfg_filename, os.path.join(temp_config_dir, temp_config_name))
         temp_module_name = os.path.splitext(temp_config_name)[0]
