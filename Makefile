@@ -1,4 +1,4 @@
-PROJECT = yolostereo3d
+PROJECT = visualdet3d
 WORKSPACE = /workspace/$(PROJECT)
 DOCKER_IMAGE = $(PROJECT):latest
 DOCKERFILE ?= Dockerfile
@@ -29,10 +29,6 @@ MPI_CMD=mpirun \
 		-x PYTHONPATH \
 		-x MASTER_ADDR=${MASTER_ADDR} \
 		-x NCCL_LL_THRESHOLD=0 \
-		-x AWS_ACCESS_KEY_ID \
-		-x AWS_SECRET_ACCESS_KEY \
-		-x WANDB_ENTITY \
-		-x WANDB_API_KEY \
 		-np ${NGPUS} \
 		-H ${MPI_HOSTS} \
 		-x NCCL_SOCKET_IFNAME=^docker0,lo \
