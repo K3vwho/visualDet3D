@@ -9,6 +9,7 @@ release_1_1/
 work/
 work_3/
 work_cycl/
+.DS_Store
 
 # C extensions
 *.so

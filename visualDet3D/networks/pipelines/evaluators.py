@@ -16,6 +16,9 @@ from visualDet3D.networks.utils.utils import BBox3dProjector, BackProjection
 from visualDet3D.data.kitti.utils import write_result_to_file
 from visualDet3D.networks.lib.fast_utils.hill_climbing import post_opt
 
+import time
+
+
 @PIPELINE_DICT.register_module
 @torch.no_grad()
 def evaluate_kitti_depth(cfg:EasyDict, 
@@ -81,8 +84,17 @@ def evaluate_kitti_obj(cfg:EasyDict,
     test_func = PIPELINE_DICT[cfg.trainer.test_func]
     projector = BBox3dProjector().cuda()
     backprojector = BackProjection().cuda()
+
+    time_start = time.time()
     for index in tqdm(range(len(dataset_val))):
         test_one(cfg, index, dataset_val, model, test_func, backprojector, projector, result_path)
+    time_end = time.time()
+    print('total inference time: ', time_end - time_start, ' s.')
+    print('average time: ', (time_end - time_start) / len(dataset_val))
+
+    #for index in tqdm(range(len(dataset_val))):
+    #    test_one(cfg, index, dataset_val, model, test_func, backprojector, projector, result_path)
+
     if "is_running_test_set" in cfg and cfg["is_running_test_set"]:
         print("Finish evaluation.")
         return
@@ -107,8 +119,12 @@ def test_one(cfg, index, dataset, model, test_func, backprojector:BackProjection
     original_height = data['original_shape'][0]
     collated_data = dataset.collate_fn([data])
     height = collated_data[0].shape[2]
-        
+
+    time_start = time.time()
     scores, bbox, obj_names = test_func(collated_data, model, None, cfg=cfg)
+    time_end = time.time()
+    print('inference eval time for frame', index, ': ', time_end - time_start, ' s.')
+
     bbox_2d = bbox[:, 0:4]
     if bbox.shape[1] > 4: # run 3D
         bbox_3d_state = bbox[:, 4:] #[cx,cy,z,w,h,l,alpha, bot, top]
