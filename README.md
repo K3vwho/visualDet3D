@@ -1,3 +1,16 @@
+# YoloStereo3D
+
+## Installation
+1. Clone the current repo to your machine
+```bash
+git clone https://github.com/K3vwho/visualDet3D.git
+cd visualDet3D
+```
+2. Make Docker-Image with
+```bash
+make docker-build
+```
+
 # Visual 3D Detection Package:
 
 This repo aims to provide flexible and reproducible visual 3D detection on KITTI dataset. We expect scripts starting from the current directory, and treat ./visualDet3D as a package that we could modify and test directly instead of a library. Several useful scripts are provided in the main directory for easy usage.
