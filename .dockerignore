@@ -1,0 +1,10 @@
+# files are ignored in teh copy command of teh dockerfile
+/work*
+/release*
+.idea
+/config
+/docs
+/demos
+/launchers
+/scripts
+*resnet34*

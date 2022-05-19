@@ -7,12 +7,11 @@ DOCKER_OPTS = \
 	-it \
 	--rm \
 	-e DISPLAY=${DISPLAY} \
-	-v /data:/data \
 	-v /tmp:/tmp \
 	-v /tmp/.X11-unix:/tmp/.X11-unix \
 	-v /mnt/fsx:/mnt/fsx \
 	-v /root/.ssh:/root/.ssh \
-	-v ~/.aws:/root/.aws \
+	-v /home/ubuntu/Masterarbeit/object_detection/data:/workspace/data \
 	--shm-size=1G \
 	--ipc=host \
 	--network=host \
@@ -39,7 +38,7 @@ MPI_CMD=mpirun \
 docker-build:
 	docker build \
 	$(DOCKER_BUILD_ARGS) \
-	-f ./docker/$(DOCKERFILE) \
+	-f ./$(DOCKERFILE) \
 	-t $(DOCKER_IMAGE) .
 
 docker-dev:

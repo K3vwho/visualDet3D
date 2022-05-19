@@ -1,8 +1,9 @@
-FROM nvidia/cuda:11.3.1-cudnn8-devel-ubuntu20.04
+FROM nvidia/cuda:11.3.0-cudnn8-devel-ubuntu20.04
 
 #RUN apt-get install ffmpeg libsm6 libxext6  -y
 #RUN pip install coloredlogs
 
+# install linux packages and python packages
 RUN apt-get upgrade -y
 RUN apt-get update
 ENV DEBIAN_FRONTEND=noninteractive
@@ -22,17 +23,13 @@ RUN pip3 install tensorflow pandas matplotlib numpy pillow opencv-python scikit-
 
 RUN pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
 
-WORKDIR /home
-
-# get github repo
-#RUN git clone https://github.com/K3vwho/visualDet3D.git
-
 #-----------------------
 # Copy working directory
 #-----------------------
 ARG WORKSPACE
 COPY . ${WORKSPACE}
-
 ENV PYTHONPATH "${PYTHONPATH}:${WORKSPACE}/visualDet3D/"
-
 WORKDIR ${WORKSPACE}
+
+# dependecies from the original repo
+RUN ./make.sh
