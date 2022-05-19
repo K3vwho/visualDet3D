@@ -31,18 +31,19 @@ else:
     #Python 2
     import cv2
 
+
 @DATASET_DICT.register_module
-class KittiStereoDataset(torch.utils.data.Dataset):
+class CustomStereoDataset(torch.utils.data.Dataset):
     """Some Information about KittiDataset"""
 
     def __init__(self, cfg, split='training'):
-        super(KittiStereoDataset, self).__init__()
+        super(CustomStereoDataset, self).__init__()
         preprocessed_path = cfg.path.preprocessed_path
         obj_types = cfg.obj_types
         aug_cfg = cfg.data.augmentation
         is_train = (split == 'training')
         imdb_file_path = os.path.join(preprocessed_path, split, 'imdb.pkl')
-        self.imdb = pickle.load(open(imdb_file_path, 'rb'))  # list of kittiData
+        self.imdb = pickle.load(open(imdb_file_path, 'rb'))  # list of Data
         self.output_dict = {
             "calib": True,
             "image": True,
@@ -99,13 +100,13 @@ class KittiStereoDataset(torch.utils.data.Dataset):
         return transformed_label, bbox3d_state
 
     def __getitem__(self, index):
-        kitti_data = self.imdb[index]
+        custom_data = self.imdb[index]
         # The calib and label has been preloaded to minimize the time in each indexing
-        kitti_data.output_dict = self.output_dict
-        calib, left_image, right_image, _, _ = kitti_data.read_data()
+        custom_data.output_dict = self.output_dict
+        calib, left_image, right_image, _, _ = custom_data.read_data()
         calib.image_shape = left_image.shape
         label = []
-        for obj in kitti_data.label:
+        for obj in custom_data.label:
             if obj.type in self.obj_types:
                 label.append(obj)
         transformed_left_image, transformed_right_image, P2, P3, transformed_label = self.transform(
@@ -167,14 +168,14 @@ class KittiStereoDataset(torch.utils.data.Dataset):
 
 
 @DATASET_DICT.register_module
-class KittiStereoTestDataset(KittiStereoDataset):
+class CustomStereoTestDataset(CustomStereoDataset):
     def __init__(self, cfg, split='test'):
         preprocessed_path = cfg.path.preprocessed_path
         obj_types = cfg.obj_types
         aug_cfg = cfg.data.augmentation
-        super(KittiStereoTestDataset, self).__init__(cfg, split)
+        super(CustomStereoTestDataset, self).__init__(cfg, split)
         imdb_file_path = os.path.join(preprocessed_path, 'test', 'imdb.pkl')
-        self.imdb = pickle.load(open(imdb_file_path, 'rb'))  # list of kittiData
+        self.imdb = pickle.load(open(imdb_file_path, 'rb'))  # list of Data
         self.output_dict = {
             "calib": True,
             "image": True,
@@ -184,10 +185,10 @@ class KittiStereoTestDataset(KittiStereoDataset):
         }
 
     def __getitem__(self, index):
-        kitti_data = self.imdb[index]
+        custom_data = self.imdb[index]
         # The calib and label has been preloaded to minimize the time in each indexing
-        kitti_data.output_dict = self.output_dict
-        calib, left_image, right_image, _, _ = kitti_data.read_data()
+        custom_data.output_dict = self.output_dict
+        calib, left_image, right_image, _, _ = custom_data.read_data()
         calib.image_shape = left_image.shape
 
         transformed_left_image, transformed_right_image, P2, P3 = self.transform(
@@ -211,3 +212,6 @@ class KittiStereoTestDataset(KittiStereoDataset):
         P2 = [item['calib'][0] for item in batch]
         P3 = [item['calib'][1] for item in batch]
         return torch.from_numpy(left_images).float(), torch.from_numpy(right_images).float(), P2, P3
+
+
+

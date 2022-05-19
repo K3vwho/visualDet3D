@@ -85,12 +85,13 @@ def evaluate_kitti_obj(cfg:EasyDict,
     projector = BBox3dProjector().cuda()
     backprojector = BackProjection().cuda()
 
-    time_start = time.time()
+    # test_one and time measurement
+    time_iteration_sum = 0
     for index in tqdm(range(len(dataset_val))):
-        test_one(cfg, index, dataset_val, model, test_func, backprojector, projector, result_path)
-    time_end = time.time()
-    print('total inference time: ', time_end - time_start, ' s.')
-    print('average time: ', (time_end - time_start) / len(dataset_val))
+        time_iteration = test_one(cfg, index, dataset_val, model, test_func, backprojector, projector, result_path)
+        time_iteration_sum = time_iteration_sum + time_iteration
+    print('total inference time: ', time_iteration_sum, ' s.')
+    print('average time: ', time_iteration_sum / len(dataset_val))
 
     #for index in tqdm(range(len(dataset_val))):
     #    test_one(cfg, index, dataset_val, model, test_func, backprojector, projector, result_path)
@@ -124,6 +125,7 @@ def test_one(cfg, index, dataset, model, test_func, backprojector:BackProjection
     scores, bbox, obj_names = test_func(collated_data, model, None, cfg=cfg)
     time_end = time.time()
     print('inference eval time for frame', index, ': ', time_end - time_start, ' s.')
+    time_iteration = time_end - time_start
 
     bbox_2d = bbox[:, 0:4]
     if bbox.shape[1] > 4: # run 3D
@@ -160,3 +162,5 @@ def test_one(cfg, index, dataset, model, test_func, backprojector:BackProjection
         if isinstance(scores, torch.Tensor):
             scores = scores.detach().cpu().numpy()
         write_result_to_file(result_path, index, scores, bbox_2d, obj_types=obj_names)
+
+    return time_iteration

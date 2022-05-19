@@ -10,6 +10,11 @@ cd visualDet3D
 ```bash
 make docker-build
 ```
+3. Run Docker-Container in Dev-mode
+```bash
+make docker-dev
+```
+4. Go to teh training steps and run teh model
 
 # Visual 3D Detection Package:
 
