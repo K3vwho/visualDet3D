@@ -14,7 +14,7 @@ make docker-build
 ```bash
 make docker-dev
 ```
-4. Go to teh training steps and run teh model
+4. Go to the training steps and run the model
 
 # Visual 3D Detection Package:
 
